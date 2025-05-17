@@ -12,6 +12,8 @@ function createWindow() {
   mainWindow = new BrowserWindow({
     width: 1200,
     height: 800,
+    frame: false,
+    transparent: true,
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false
@@ -35,13 +37,29 @@ app.on('activate', () => {
   }
 });
 
-ipcMain.handle('launch-minecraft', async (event, version) => {
+ipcMain.handle('minimize-window', () => {
+  mainWindow.minimize();
+});
+
+ipcMain.handle('maximize-window', () => {
+  if (mainWindow.isMaximized()) {
+    mainWindow.unmaximize();
+  } else {
+    mainWindow.maximize();
+  }
+});
+
+ipcMain.handle('close-window', () => {
+  mainWindow.close();
+});
+
+ipcMain.handle('launch-minecraft', async (event) => {
   const opts = {
     clientPackage: null,
     authorization: store.get('auth'),
     root: path.join(app.getPath('appData'), '.A'),
     version: {
-      number: version,
+      number: '1.20.4',
       type: 'release'
     }
   };
