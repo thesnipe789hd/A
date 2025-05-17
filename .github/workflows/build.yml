@@ -8,11 +8,10 @@ on:
 
 jobs:
   build:
-    runs-on: ${{ matrix.os }}
+    runs-on: windows-latest
     
     strategy:
       matrix:
-        os: [windows-latest, macos-latest, ubuntu-latest]
         node-version: [18.x]
     
     steps:
@@ -22,10 +21,19 @@ jobs:
       uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node-version }}
-        cache: 'npm'
         
+    - name: Generate lock file if missing
+      run: |
+        if (!(Test-Path -Path "package-lock.json")) {
+          Write-Host "package-lock.json not found, generating with npm install..."
+          npm install
+        } else {
+          Write-Host "package-lock.json already present"
+        }
+      shell: pwsh
+
     - name: Install dependencies
-      run: npm install
+      run: npm ci
       
     - name: Build
       run: npm run build
@@ -33,6 +41,6 @@ jobs:
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: launcher-${{ matrix.os }}
+        name: launcher-windows
         path: dist/
         retention-days: 5
