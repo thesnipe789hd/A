@@ -1,0 +1,21 @@
+body {
+  margin: 0;
+  padding: 20px;
+  background-color: #1a1a1a;
+  color: white;
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+button {
+  background-color: #44bd32;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+button:hover {
+  background-color: #3da12c;
+}
